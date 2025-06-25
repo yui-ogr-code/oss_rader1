@@ -1,0 +1,29 @@
+name: OpenAI Summary Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  summary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install openai
+
+      - name: Call OpenAI API
+        run: |
+          python -c "
+import os, openai
+openai.api_key = os.getenv('OPENAI_API_KEY')
+models = openai.models.list()
+print([m.id for m in models['data']])
+"
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
